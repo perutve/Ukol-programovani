@@ -2,21 +2,18 @@ package cz.czechitas.kockamyssyr;
 
 import java.util.*;
 import java.util.stream.*;
-import com.sun.istack.internal.*;
 import cz.czechitas.kockamyssyr.api.*;
 import cz.czechitas.kockamyssyr.engine.swing.*;
 
 public class HlavniProgram {
 
     private Cat tom;
-
     private Mouse jerry;
 
     private List<Tree> souradniceStromy;
     private List<VolnePole> souradniceVolnePole;
 
-    private Random generatorNahodnychCisel = new Random();
-    private RandomMovement nahodnyPohybKocky;
+    private final Random generatorNahodnychCisel = new Random();
 
     public void main(String[] args) {
 
@@ -40,6 +37,11 @@ public class HlavniProgram {
 
     private void start(){
 
+        Cat bubu = createCat(100, 100);
+        Cat lary = createCat(100, 800);
+        Cat coco = createCat(1500, 100);
+        Cat fifi = createCat(1500, 800);
+
         vygenerujJidlo();
 
         jerry = new Mouse(900, 400);
@@ -47,29 +49,35 @@ public class HlavniProgram {
         tom = new Cat(souradniceVolnePole.get(vygenerujIndex()).getSouradniceX(),
                 souradniceVolnePole.get(vygenerujIndex()).getSouradniceY()); // tom.setBrain(new KeyboardBrain());
 
-        Cat bubu = new Cat(100, 100);
-        Cat lary = new Cat(1500, 100);
-        Cat coco = new Cat(100, 800);
-        Cat fifi = new Cat(1500, 800);
-
         jerry.setBrain(new KeyboardBrain(KeyCode.UP, KeyCode.LEFT, KeyCode.DOWN, KeyCode.RIGHT));
 
         tom.setBrain(this::controlPlayer);
 
-        vytvorRandomKocku(bubu);
-        vytvorRandomKocku(lary);
-        vytvorRandomKocku(coco);
-        vytvorRandomKocku(fifi);
+        catRandomMovement(bubu);
+        catRandomMovement(lary);
+        catRandomMovement(coco);
+        catRandomMovement(fifi);
     }
 
-    private void vytvorRandomKocku(Cat kocka){
-        nahodnyPohybKocky = new RandomMovement(jerry, kocka);
+    private void catRandomMovement(Cat kocka){
+        RandomMovement nahodnyPohybKocky = new RandomMovement(jerry, kocka);
         nahodnyPohybKocky.setRandomBrain();
     }
 
-    private List vygenerujVolnePole(){
+    private Cat createCat(int souradniceX, int souradniceY){
+        Cat kocka = new Cat(souradniceX, souradniceY);
+        for (VolnePole volnePole : souradniceVolnePole){
+            if (souradniceX == volnePole.getSouradniceX() && souradniceY == volnePole.getSouradniceY()){
+                volnePole.setkVymazani(true);
+            }
+        }
+        return kocka;
+    }
+
+    private List<VolnePole> vygenerujVolnePole(){
 
         souradniceVolnePole = new ArrayList<>();
+
         for (int x = 100; x <= 1500; x = x + 50){
             for (int y = 100; y <= 800; y = y + 50){
                 souradniceVolnePole.add(new VolnePole(x, y));
@@ -84,11 +92,13 @@ public class HlavniProgram {
                 }
             }
         }
+        return souradniceVolnePole;
+    }
 
+    private List<VolnePole> filterVolnePole(){
         souradniceVolnePole = souradniceVolnePole.stream().filter((objektZPole) ->
                 !objektZPole.iskVymazani()).collect(Collectors.toList());
         return souradniceVolnePole;
-
     }
 
     private int vygenerujIndex(){
@@ -97,23 +107,24 @@ public class HlavniProgram {
 
     private void vygenerujJidlo(){
 
-        List<VolnePole> souradniceJidlo = souradniceVolnePole;
+        souradniceVolnePole = filterVolnePole();
         VolnePole jidlo;
 
         for (int i = 0; i <= 20; i++){
 
-            jidlo = souradniceJidlo.get(vygenerujIndex());
+            jidlo = souradniceVolnePole.get(vygenerujIndex());
             new Cheese(jidlo.getSouradniceX(), jidlo.getSouradniceY());
 
-            souradniceJidlo.remove(jidlo);
-            jidlo = souradniceJidlo.get(vygenerujIndex());
+            souradniceVolnePole.remove(jidlo);
+            jidlo = souradniceVolnePole.get(vygenerujIndex());
 
             new Meat(jidlo.getSouradniceX(), jidlo.getSouradniceY());
-            souradniceJidlo.remove(jidlo);
+            souradniceVolnePole.remove(jidlo);
+
         }
     }
 
-    private List vygenerujBludiste(){
+    private List<Tree> vygenerujBludiste(){
 
         souradniceStromy = new ArrayList<>();
 
