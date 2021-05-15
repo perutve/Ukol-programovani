@@ -24,7 +24,6 @@ public class RandomMovement {
     }
 
     private void randomPohyb(Cat kocka) {
-
         Random generatorNahodnychCisel = new Random();
         int vyberPohybu;
 
@@ -37,8 +36,6 @@ public class RandomMovement {
             } else {
                 kocka.turnLeft();
             }
-
         }
-
     }
 }

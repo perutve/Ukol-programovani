@@ -16,27 +16,12 @@ public class HlavniProgram {
     private final Random generatorNahodnychCisel = new Random();
 
     public void main(String[] args) {
-
         souradniceStromy = vygenerujBludiste();
         souradniceVolnePole = vygenerujVolnePole();
         start();
-
-        //view -> parametr info (ctrl+P)
-        // ; code -> completion -> smart Type(CTRL+shift+space)(případně Basic)
-
     }
 
-//    public void brain(Cat kocka){
-//        while (jerry.isAlive()){
-//            int rozdilSouradnicX = ziskejRozdilXSouradnic(kocka, jerry);
-//            int rozdilSouradnicY = ziskejRozdilYSouradnic(kocka, jerry);
-//            posunSeOX(kocka, rozdilSouradnicX);
-//            posunSeOY(kocka, rozdilSouradnicY);
-//        }
-//    }
-
     private void start(){
-
         Cat bubu = createCat(100, 100);
         Cat lary = createCat(100, 800);
         Cat coco = createCat(1500, 100);
@@ -75,7 +60,6 @@ public class HlavniProgram {
     }
 
     private List<VolnePole> vygenerujVolnePole(){
-
         souradniceVolnePole = new ArrayList<>();
 
         for (int x = 100; x <= 1500; x = x + 50){
@@ -106,7 +90,6 @@ public class HlavniProgram {
     }
 
     private void vygenerujJidlo(){
-
         souradniceVolnePole = filterVolnePole();
         VolnePole jidlo;
 
@@ -120,12 +103,10 @@ public class HlavniProgram {
 
             new Meat(jidlo.getSouradniceX(), jidlo.getSouradniceY());
             souradniceVolnePole.remove(jidlo);
-
         }
     }
 
     private List<Tree> vygenerujBludiste(){
-
         souradniceStromy = new ArrayList<>();
 
         for (int x = 50; x <= 1550; x = x + 50){
@@ -223,7 +204,6 @@ public class HlavniProgram {
         else {
             kocka.moveForward(rozdilX);
         }
-
     }
 
     private void posunSeOY(Cat kocka, int rozdilY){
@@ -238,6 +218,4 @@ public class HlavniProgram {
             kocka.turnLeft();
         }
     }
-
-
 }
